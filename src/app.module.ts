@@ -11,6 +11,7 @@ import { ProjectsModule } from './modules/projects/projects.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { MatchingModule } from './modules/matching/matching.module';
 import { HealthModule } from './health/health.module';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { HealthModule } from './health/health.module';
     HealthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, LoggingInterceptor],
 })
 export class AppModule {}
