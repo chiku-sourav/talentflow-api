@@ -1,0 +1,362 @@
+openapi: 3.0.3
+info:
+    title: TalentFlow API
+    version: 1.0.0
+    description: |
+        TalentFlow Backend API for managing remote developer hiring, matching, and contracts.
+        Built with NestJS + Prisma + PostgreSQL.
+
+servers:
+    - url: http://localhost:3000/api
+
+tags:
+    - name: Auth
+    - name: Developers
+    - name: Clients
+    - name: Projects
+    - name: Matching
+    - name: Contracts
+    - name: Health
+
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
+    schemas:
+        ##################################
+        # AUTH
+        ##################################
+
+        LoginDto:
+            type: object
+            required: [email, password]
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+
+        AuthResponse:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+
+        ##################################
+        # DEVELOPER
+        ##################################
+
+        Developer:
+            type: object
+            properties:
+                id:
+                    type: string
+                bio:
+                    type: string
+                experience:
+                    type: integer
+                hourlyRate:
+                    type: integer
+                available:
+                    type: boolean
+
+        CreateDeveloperDto:
+            type: object
+            required: [experience, hourlyRate]
+            properties:
+                bio:
+                    type: string
+                experience:
+                    type: integer
+                hourlyRate:
+                    type: integer
+                available:
+                    type: boolean
+
+        ##################################
+        # CLIENT
+        ##################################
+
+        Client:
+            type: object
+            properties:
+                id:
+                    type: string
+                companyName:
+                    type: string
+                website:
+                    type: string
+
+        ##################################
+        # PROJECT
+        ##################################
+
+        Project:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                description:
+                    type: string
+                budget:
+                    type: integer
+                status:
+                    type: string
+
+        CreateProjectDto:
+            type: object
+            required: [title, description, budget]
+            properties:
+                title:
+                    type: string
+                description:
+                    type: string
+                budget:
+                    type: integer
+                skillIds:
+                    type: array
+                    items:
+                        type: string
+
+        ##################################
+        # MATCH
+        ##################################
+
+        Match:
+            type: object
+            properties:
+                developerId:
+                    type: string
+                score:
+                    type: number
+
+        ##################################
+        # CONTRACT
+        ##################################
+
+        Contract:
+            type: object
+            properties:
+                id:
+                    type: string
+                developerId:
+                    type: string
+                projectId:
+                    type: string
+                rate:
+                    type: integer
+                status:
+                    type: string
+
+##################################
+# PATHS
+##################################
+
+paths:
+    ##################################
+    # HEALTH
+    ##################################
+
+    /health:
+        get:
+            tags: [Health]
+            summary: Health check
+            responses:
+                200:
+                    description: API is running
+
+    ##################################
+    # AUTH
+    ##################################
+
+    /auth/login:
+        post:
+            tags: [Auth]
+            summary: Login user
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LoginDto"
+            responses:
+                200:
+                    description: JWT returned
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AuthResponse"
+
+    ##################################
+    # DEVELOPERS
+    ##################################
+
+    /developers:
+        get:
+            tags: [Developers]
+            security:
+                - bearerAuth: []
+            summary: List developers
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    description: Developer list
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Developer"
+
+        post:
+            tags: [Developers]
+            security:
+                - bearerAuth: []
+            summary: Create developer profile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateDeveloperDto"
+            responses:
+                201:
+                    description: Created
+
+    /developers/{id}:
+        get:
+            tags: [Developers]
+            security:
+                - bearerAuth: []
+            summary: Get developer by ID
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: Developer returned
+
+        patch:
+            tags: [Developers]
+            security:
+                - bearerAuth: []
+            summary: Update developer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: Updated
+
+        delete:
+            tags: [Developers]
+            security:
+                - bearerAuth: []
+            summary: Delete developer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+            responses:
+                204:
+                    description: Deleted
+
+    ##################################
+    # PROJECTS
+    ##################################
+
+    /projects:
+        get:
+            tags: [Projects]
+            security:
+                - bearerAuth: []
+            summary: List projects
+            responses:
+                200:
+                    description: Project list
+
+        post:
+            tags: [Projects]
+            security:
+                - bearerAuth: []
+            summary: Create project
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateProjectDto"
+            responses:
+                201:
+                    description: Created
+
+    ##################################
+    # MATCHING
+    ##################################
+
+    /projects/{id}/matches:
+        get:
+            tags: [Matching]
+            security:
+                - bearerAuth: []
+            summary: Get matched developers
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: Ranked matches
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Match"
+
+    ##################################
+    # CONTRACTS
+    ##################################
+
+    /contracts:
+        post:
+            tags: [Contracts]
+            security:
+                - bearerAuth: []
+            summary: Create contract
+            responses:
+                201:
+                    description: Contract created
+
+    /contracts/{id}:
+        patch:
+            tags: [Contracts]
+            security:
+                - bearerAuth: []
+            summary: Update contract status
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+            responses:
+                200:
+                    description: Updated
