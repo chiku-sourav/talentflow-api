@@ -1,34 +1,24 @@
 import {
-  IsString,
-  IsEmail,
-  IsArray,
-  ArrayNotEmpty,
-  IsInt,
-  Min,
   IsBoolean,
+  IsInt,
   IsOptional,
+  IsString,
+  Min
 } from 'class-validator';
 
 export class CreateDeveloperDto {
-  @IsString()
-  name: string;
-
-  @IsEmail()
-  email: string;
-
-  @IsArray()
-  @ArrayNotEmpty()
-  skills: string[];
-
   @IsInt()
   @Min(0)
   experience: number;
 
   @IsInt()
   @Min(0)
-  rate: number;
+  hourlyRate: number;
 
   @IsOptional()
   @IsBoolean()
   available?: boolean;
+
+  @IsString()
+  userId: string;
 }
