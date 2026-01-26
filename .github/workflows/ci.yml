@@ -20,7 +20,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
-      DATABASE_URL: postgresql://nestuser:nestpass@postgres:5432/nestdb
+      DATABASE_URL: postgresql://nestuser:nestpass@localhost:5432/nestdb
 
     steps:
       - uses: actions/checkout@v4
