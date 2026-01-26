@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../database/prisma.service';
-import { CreateDeveloperDto } from '../dto/create-developer.dto';
-import { QueryDeveloperDto } from '../dto/query-developer.dto';
-import { UpdateDeveloperDto } from '../dto/update-developer.dto';
+import { PrismaService } from '../../database/prisma.service';
+import { CreateDeveloperDto } from './dto/create-developer.dto';
+import { QueryDeveloperDto } from './dto/query-developer.dto';
+import { UpdateDeveloperDto } from './dto/update-developer.dto';
 
 @Injectable()
 export class DevelopersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateDeveloperDto) {
     return this.prisma.developer.create({ data: dto });
@@ -25,7 +25,7 @@ export class DevelopersService {
       where.rate = { lte: maxRate };
     }
 
-    const [data, total] = await this.prisma.$transaction([
+    const [data, total] = await Promise.all([
       this.prisma.developer.findMany({
         where,
         skip: (page - 1) * limit,

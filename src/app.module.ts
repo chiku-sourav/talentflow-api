@@ -13,7 +13,18 @@ import { MatchingModule } from './modules/matching/matching.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [AppLoggerModule, DevelopersModule, ConfigModule, AuthModule, UsersModule, ClientsModule, ProjectsModule, ContractsModule, MatchingModule, HealthModule],
+  imports: [
+    AppLoggerModule,
+    DevelopersModule,
+    ConfigModule,
+    AuthModule,
+    UsersModule,
+    ClientsModule,
+    ProjectsModule,
+    ContractsModule,
+    MatchingModule,
+    HealthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
