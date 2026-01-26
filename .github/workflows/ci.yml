@@ -19,6 +19,6 @@ jobs:
       - uses: actions/checkout@v4
       - run: npm ci
       - run: npx prisma generate
-      - run: npx prisma db seed
+      - run: npx tsx ./prisma/seed.ts
       - run: npm run test
       - run: npm run build

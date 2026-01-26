@@ -1,9 +1,13 @@
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient, ProjectStatus, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
 
+const prisma = new PrismaClient({ adapter });
 const hash = async (pw: string) => await bcrypt.hash(pw, 10);
 
 async function main() {
@@ -163,5 +167,10 @@ async function main() {
 }
 
 main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect());
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
