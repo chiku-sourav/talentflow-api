@@ -8,10 +8,10 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CreateDeveloperDto } from '../dto/create-developer.dto';
-import { QueryDeveloperDto } from '../dto/query-developer.dto';
-import { UpdateDeveloperDto } from '../dto/update-developer.dto';
 import { DevelopersService } from './developers.service';
+import { CreateDeveloperDto } from './dto/create-developer.dto';
+import { QueryDeveloperDto } from './dto/query-developer.dto';
+import { UpdateDeveloperDto } from './dto/update-developer.dto';
 
 @Controller('developers')
 export class DevelopersController {
