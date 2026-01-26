@@ -15,7 +15,7 @@ services:
       - .env
     depends_on:
       - postgres
-      - redis
+      # - redis
     volumes:
       - .:/app
       - /app/node_modules
@@ -41,42 +41,42 @@ services:
   ################################################
   # Redis
   ################################################
-  redis:
-    image: redis:7-alpine
-    container_name: talentflow-redis
-    ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
-    volumes:
-      - redisdata:/data
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: talentflow-redis
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --appendonly yes
+  #   volumes:
+  #     - redisdata:/data
 
 
   ################################################
   # Prometheus
   ################################################
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: talentflow-prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    depends_on:
-      - api
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: talentflow-prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   depends_on:
+  #     - api
 
 
   ################################################
   # Grafana
   ################################################
-  grafana:
-    image: grafana/grafana:latest
-    container_name: talentflow-grafana
-    ports:
-      - "3001:3000"
-    volumes:
-      - grafana-data:/var/lib/grafana
-    depends_on:
-      - prometheus
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   container_name: talentflow-grafana
+  #   ports:
+  #     - "3001:3000"
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #   depends_on:
+  #     - prometheus
 
 
 ################################################
@@ -84,5 +84,5 @@ services:
 ################################################
 volumes:
   pgdata:
-  redisdata:
-  grafana-data:
+  # redisdata:
+  # grafana-data:
