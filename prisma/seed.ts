@@ -2,9 +2,7 @@ import { PrismaClient, ProjectStatus, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
 
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-});
+const prisma = new PrismaClient();
 
 const hash = async (pw: string) => await bcrypt.hash(pw, 10);
 
