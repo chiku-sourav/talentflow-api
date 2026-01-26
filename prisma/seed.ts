@@ -3,16 +3,6 @@ import { PrismaClient, ProjectStatus, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
 
-console.log("--- 🛡️ Environment Debug ---");
-console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
-if (process.env.DATABASE_URL) {
-  // Logs the length and masked version to avoid leaking secrets in logs
-  const url = process.env.DATABASE_URL;
-  console.log("URL Length:", url.length);
-  console.log("URL Prefix:", url.substring(0, 10), "...");
-}
-console.log("---------------------------");
-
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
 });
