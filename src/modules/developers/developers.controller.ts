@@ -10,35 +10,35 @@ import {
 } from '@nestjs/common';
 import { DevelopersService } from './developers.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
-import { QueryDeveloperDto } from './dto/query-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
+import { QueryDeveloperDto } from './dto/query-developer.dto';
 
 @Controller('developers')
 export class DevelopersController {
-  constructor(private readonly service: DevelopersService) {}
+  public constructor(private readonly developersService: DevelopersService) {}
 
   @Post()
-  create(@Body() dto: CreateDeveloperDto) {
-    return this.service.create(dto);
+  public create(@Body() dto: CreateDeveloperDto) {
+    return this.developersService.create(dto);
   }
 
   @Get()
-  findAll(@Query() query: QueryDeveloperDto) {
-    return this.service.findAll(query);
+  public findAll(@Query() query: QueryDeveloperDto) {
+    return this.developersService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+  public findOne(@Param('id') id: string) {
+    return this.developersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateDeveloperDto) {
-    return this.service.update(id, dto);
+  public update(@Param('id') id: string, @Body() dto: UpdateDeveloperDto) {
+    return this.developersService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
+  public remove(@Param('id') id: string) {
+    return this.developersService.remove(id);
   }
 }

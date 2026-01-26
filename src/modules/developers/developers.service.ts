@@ -6,13 +6,13 @@ import { UpdateDeveloperDto } from './dto/update-developer.dto';
 
 @Injectable()
 export class DevelopersService {
-  constructor(private prisma: PrismaService) {}
+  public constructor(private prismaService: PrismaService) {}
 
-  async create(dto: CreateDeveloperDto) {
-    return this.prisma.developer.create({ data: dto });
+  public async create(dto: CreateDeveloperDto) {
+    return this.prismaService.developer.create({ data: dto });
   }
 
-  async findAll(query: QueryDeveloperDto) {
+  public async findAll(query: QueryDeveloperDto) {
     const { page, limit, skill, maxRate } = query;
 
     const where: any = {};
@@ -26,13 +26,13 @@ export class DevelopersService {
     }
 
     const [data, total] = await Promise.all([
-      this.prisma.developer.findMany({
+      this.prismaService.developer.findMany({
         where,
-        skip: (page - 1) * limit,
+        // skip: (page - 1) * limit,
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.developer.count({ where }),
+      this.prismaService.developer.count(),
     ]);
 
     return {
@@ -46,19 +46,19 @@ export class DevelopersService {
     };
   }
 
-  async findOne(id: string) {
-    return this.prisma.developer.findUnique({ where: { id } });
+  public async findOne(id: string) {
+    return this.prismaService.developer.findUnique({ where: { id } });
   }
 
-  async update(id: string, dto: UpdateDeveloperDto) {
-    return this.prisma.developer.update({
+  public async update(id: string, dto: UpdateDeveloperDto) {
+    return this.prismaService.developer.update({
       where: { id },
       data: dto,
     });
   }
 
-  async remove(id: string) {
-    return this.prisma.developer.delete({
+  public async remove(id: string) {
+    return this.prismaService.developer.delete({
       where: { id },
     });
   }
