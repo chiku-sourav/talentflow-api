@@ -14,11 +14,19 @@ jobs:
           POSTGRES_USER: nestuser
           POSTGRES_PASSWORD: nestpass
           POSTGRES_DB: nestdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://nestuser:nestpass@postgres:5432/nestdb
 
     steps:
       - uses: actions/checkout@v4
       - run: npm ci
       - run: npx prisma generate
+      - run: npx prisma migrate deploy
       - run: npx prisma db seed
       - run: npm run test
       - run: npm run build
