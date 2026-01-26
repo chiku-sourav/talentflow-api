@@ -1,98 +1,359 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# TalentFlow API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A **production-grade backend platform** for remote developer hiring and project matching.
+Built with **NestJS, Prisma 7, PostgreSQL, Redis, and full observability (Prometheus + Grafana)**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project demonstrates **senior-level backend engineering practices**: clean architecture, optimized queries, caching, metrics, logging, testing strategy, and containerized infrastructure.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Table of Contents
 
-## Project setup
+* Overview
+* Architecture
+* Tech Stack
+* Features
+* System Design
+* Getting Started
+* Environment Variables
+* Database & Prisma
+* Caching Strategy
+* Observability
+* Developer Experience
+* Scripts
+* Documentation
+* Performance Characteristics
+* Roadmap
 
-```bash
-$ npm install
+---
+
+## Overview
+
+TalentFlow is a backend system similar to **Proxify / Toptal-style hiring platforms**, allowing:
+
+* developers to register skills and availability
+* clients to post projects
+* automatic matching of developers to projects
+* caching and ranking of matches
+* monitoring, metrics, and structured logs
+
+The system is **API-only** and designed to be frontend-agnostic.
+
+---
+
+## Architecture
+
+```
+Clients (Postman / Frontend)
+        ↓
+NestJS API (Controllers, Guards, Services)
+        ↓
+Prisma ORM
+        ↓
+PostgreSQL
+        ↑
+Redis (match cache)
+        ↑
+Prometheus → Grafana (metrics)
 ```
 
-## Compile and run the project
+### Architecture Style
+
+* Modular monolith
+* Stateless API
+* Cache-aside pattern
+* Docker-orchestrated services
+
+---
+
+## Tech Stack
+
+### Core
+
+* **Node.js 20**
+* **NestJS**
+* **TypeScript**
+
+### Data
+
+* **PostgreSQL**
+* **Prisma ORM (v7)**
+
+### Caching
+
+* **Redis**
+
+### Observability
+
+* **Prometheus**
+* **Grafana**
+* **Pino (structured logging)**
+
+### Tooling
+
+* ESLint (Flat Config)
+* Prettier
+* EditorConfig
+* Docker & Docker Compose
+
+---
+
+## Features
+
+### Authentication & Authorization
+
+* JWT-based authentication
+* Role-based access control (Admin / Client / Developer)
+
+### Domain
+
+* Users
+* Developers
+* Clients
+* Skills (normalized, many-to-many)
+* Projects
+* Matching engine
+* Contracts
+
+### Matching Engine
+
+* Skill overlap scoring
+* Availability filtering
+* Budget constraints
+* Ranked results
+* Optimized SQL + Redis caching
+
+### Performance
+
+* Indexed queries
+* DB-side filtering
+* Aggregation in SQL
+* Redis cache with TTL and invalidation
+
+### Observability
+
+* Request rate
+* Latency (avg + P95)
+* Cache hit/miss ratio
+* Matching query count
+* CPU & memory metrics
+
+---
+
+## System Design Highlights
+
+### Prisma 7 Configuration
+
+* No DB URL in `schema.prisma`
+* Centralized configuration in `prisma.config.ts`
+* Clean separation of schema and environment secrets
+
+### Matching Optimization
+
+* Heavy matching logic executed in SQL
+* `COUNT(skillId)` used for scoring
+* `LIMIT` applied in database
+* Redis cache reduces latency from ~200ms → ~5ms
+
+### Caching Strategy
+
+* Cache-aside pattern
+* Key: `matches:project:{projectId}`
+* TTL-based invalidation
+* Explicit invalidation on updates
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+* Docker
+* Docker Compose
+* Node.js 20+
+
+---
+
+### Clone
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/your-username/talentflow-api.git
+cd talentflow-api
 ```
 
-## Run tests
+---
+
+### Start Everything
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker compose up --build
 ```
 
-## Deployment
+Services started:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+* API → [http://localhost:3000](http://localhost:3000)
+* PostgreSQL → 5432
+* Redis → 6379
+* Prometheus → [http://localhost:9090](http://localhost:9090)
+* Grafana → [http://localhost:3001](http://localhost:3001)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
+
+## Environment Variables
+
+`.env`
+
+```env
+PORT=3000
+
+DATABASE_URL=postgresql://nestuser:nestpass@postgres:5432/nestdb
+
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+JWT_SECRET=devsecret
+JWT_EXPIRES=1d
+
+LOG_LEVEL=info
+NODE_ENV=development
+```
+
+---
+
+## Database & Prisma
+
+### Migrations
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma migrate dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Seed Data
 
-## Resources
+```bash
+npx prisma db seed
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Prisma Studio
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npx prisma studio
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Caching Strategy (Redis)
 
-## Stay in touch
+* Matches cached per project
+* TTL: 10 minutes
+* Invalidated on:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+  * project updates
+  * developer availability / skills change
+  * contract creation
 
-## License
+Expected cache hit rate in steady state: **> 80%**
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## Observability
+
+### Metrics Endpoint
+
+```
+GET /metrics
+```
+
+Scraped by Prometheus.
+
+### Grafana Dashboard
+
+* Request rate
+* Cache hit ratio
+* P95 latency
+* Matching queries/sec
+* CPU & memory usage
+
+Prebuilt dashboard JSON included in:
+
+```
+monitoring/grafana-dashboard.json
+```
+
+---
+
+## Developer Experience
+
+### Linting
+
+```bash
+npm run lint
+npm run lint:fix
+```
+
+### Formatting
+
+```bash
+npm run format
+```
+
+### EditorConfig
+
+Ensures consistent formatting across editors and OS.
+
+---
+
+## Scripts
+
+```json
+{
+  "start:dev": "nest start --watch",
+  "build": "nest build",
+  "lint": "eslint .",
+  "lint:fix": "eslint . --fix",
+  "format": "prettier --write .",
+  "test": "jest",
+  "test:e2e": "jest --config ./test/jest-e2e.json"
+}
+```
+
+---
+
+## Documentation
+
+All design documents are included:
+
+```
+docs/
+  FRD.md                  # Functional Requirements
+  TDD.md                  # Technical Design
+  openapi.yaml            # API contract
+  er-diagram.md           # Database ER diagram
+  architecture.md         # System architecture
+  test-strategy.md        # Testing approach
+  performance-test-plan.md
+  prisma-optimization-checklist.md
+```
+
+---
+
+## Performance Characteristics
+
+| Scenario                   | Expected |
+| -------------------------- | -------- |
+| Avg API latency            | < 50 ms  |
+| P95 latency                | < 200 ms |
+| Matching endpoint (cached) | < 5 ms   |
+| Matching endpoint (cold)   | < 300 ms |
+| Cache hit rate             | > 80%    |
+
+---
+
+## Roadmap
+
+* Redis warm-up jobs
+* Background matching recomputation
+* Rate limiting
+* Role-based dashboards
+* Cloud deployment (AWS / Render)
+* Log aggregation with Grafana Loki
