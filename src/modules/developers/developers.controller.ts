@@ -13,7 +13,7 @@ import { CreateDeveloperDto } from './dto/create-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
 import { QueryDeveloperDto } from './dto/query-developer.dto';
 
-@Controller('developers')
+@Controller({ path: 'developers', version: '1' })
 export class DevelopersController {
   public constructor(private readonly developersService: DevelopersService) {}
 
