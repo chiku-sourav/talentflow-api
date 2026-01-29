@@ -220,29 +220,3 @@ This diagram demonstrates:
 These are strong **senior backend signals**.
 
 ---
-
-# Documentation Set (Recommended)
-
-Your project should now have:
-
-```
-docs/
-  FRD.md
-  TDD.md
-  openapi.yaml
-  er-diagram.md
-  architecture.md
-```
-
-This is equivalent to real-world backend project documentation.
-
----
-
-If useful, next I can generate:
-
-* sequence diagram (login flow)
-* sequence diagram (matching flow)
-* deployment diagram (cloud)
-* or test strategy document
-
-Choose one.
